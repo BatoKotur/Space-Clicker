@@ -1,0 +1,195 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+#game {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #101333;
+}
+
+p {
+  color: black;
+  font-family: 'Lato', sans-serif;
+}
+
+.star {
+  width: 1rem;
+  height: auto;
+  top: 1px;
+  left: 1px;
+}
+
+#upgradeButton {
+  display: none;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+  bottom: 30px;
+}
+
+#upgradeButton:focus {
+  outline: none;
+}
+
+#upgradeButton:active {
+  background-color: orange;
+}
+
+#ground {
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  z-index: 0;
+}
+
+#rocketFlame {
+  bottom: 70px;
+  width: 25%;
+  z-index: 0
+}
+
+#arrowIcon {
+  width: 1.5rem;
+  height: auto;
+  transform: rotate(0deg);
+}
+
+.logo {
+  top: 50px;
+  width: 70%;
+  height: auto;
+  max-width: 300px;
+  max-height: 300px;
+}
+
+input[type="checkbox"]:focus{
+  outline:0;
+}
+
+.assets {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.upgrades {
+  margin: 20px;
+  color: white;
+  font-size: 2rem;
+}
+
+#upgradeWindowContainer {
+  justify-content: center;
+  align-items: center;
+  border-radius: 2rem;
+  width: 90%;
+  height: 75%;
+  top: 50px;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  z-index: 2;
+  overflow-y: scroll;
+}
+
+#rocketStart {
+  bottom: 70px;
+  width: 50%;
+  z-index: 1
+}
+
+#startScreenContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(8px);
+  z-index: 2;
+}
+
+#startGameButton {
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  display: block;
+  border-radius: .5rem;
+  transform: translateY(100px);
+}
+
+#score {
+  font-size: 2rem;
+  color: white;
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+}
+
+#fuel {
+  border-bottom: none;
+}
+
+.upgradeContainer {
+  margin: 1rem;
+  border-bottom: .5px solid white;
+}
+
+.upgradeContainer p{
+  font-size: 2rem;
+  color: white;
+  text-transform: uppercase;
+}
+
+.checkboxes {
+  display: flex;
+  margin: 1rem 0rem 2rem 0;
+}
+
+.checkbox {
+  margin-right: 2rem;
+  -webkit-appearance: none;
+	background-color: #fafafa;
+	border: 1px solid #cacece;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+	padding: 12px;
+	border-radius: 3px;
+	display: inline-block;
+	position: relative;
+}
+
+.checkbox:enabled {
+  border: 2px solid orange;
+}
+
+.checkbox:disabled {
+  background: lightgray;
+}
+
+.checkbox:active, .checkbox:checked:active {
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+.checkbox:checked {
+	background-color: orange;
+	border: 2px solid #adb8c0;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+	color: #99a1a7;
+}
+
+
+
