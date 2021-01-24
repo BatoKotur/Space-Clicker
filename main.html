@@ -21,11 +21,14 @@
       </button>
       <img class="assets logo" src="./assets/Space_Away_Logo.png">
     </div>
-    <div id="background"></div>
-    <div id="rocket">
+    <div id="starContainer"></div>
+    <div id="rocket" class="assets">
       <img id="rocketStart" class="assets" src="./assets/Rocket.png">
       <img id="rocketFlame" class="assets" src="./assets/Rocket_Flame.png">
       <img id="shell1" class="assets" src="./assets/Shell_1.png">
+      <img id="shell2" class="assets" src="./assets/Shell_2.png">
+      <img id="wings1" class="assets" src="./assets/Wings_1.png">
+      <img id="turboMode" class="assets" src="./assets/Turbo.png">
     </div>
     <img id="ground" class="assets" src="./assets/Ground.png">
     <button id="upgradeButton" class="assets"><img id="arrowIcon" src="./assets/Up-arrow.svg"></button>
@@ -47,16 +50,18 @@
 
         </div>
       </div>
-      <div id="turbo" class="upgradeContainer">
-        <p>Turbo</p>
-        <div class="checkboxes">
-
-        </div>
-      </div>
       <div id="fuel" class="upgradeContainer">
         <p>Fuel</p>
         <div class="checkboxes">
 
+        </div>
+      </div>
+      <div id="turbo" class="upgradeContainer">
+        <p>Turbo</p>
+        <label id="switch">
+          <input id="turboCheckbox" class="checkbox" type="checkbox" disabled>
+          <span id="slider" disabled></span>
+        </label>
         </div>
       </div>
     </div>

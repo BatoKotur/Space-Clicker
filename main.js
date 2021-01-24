@@ -4,22 +4,17 @@ var minStarDistance = 100;
 var intervalId;
 var gameScore = 0;
 var baseScorePerSecond = 10;
-var scorePerSecond = 100; // baseScorePerSecond;
+var scorePerSecond = baseScorePerSecond;
+var timeOutId;
 var baseCost = 500;
+var starCounter = 20;
 function init() {
     document.getElementById('startGameButton').addEventListener('click', startGame);
-    document.getElementById('rocketStart').addEventListener('click', startRocket);
+    document.getElementById('rocket').addEventListener('click', startRocket);
     document.getElementById('upgradeButton').addEventListener('click', upgradeWindow);
+    document.getElementById('turboCheckbox').addEventListener('change', turboSwitch);
+    createStars();
     createCheckboxes();
-    createStar(40, 20);
-    createStar(100, 50);
-    createStar(30, 100);
-    createStar(15, 80);
-    createStar(60, 10);
-    createStar(100, 75);
-    createStar(40, 53);
-    createStar(23, 75);
-    createStar(87, 10);
 }
 function update() {
     document.getElementById('score').innerHTML = Math.floor(gameScore).toString();
@@ -30,6 +25,13 @@ function update() {
     if (gameScore >= baseCost) {
         updateCheckboxes(Math.log10(gameScore / 500)); // Change lib 
     }
+    if (gameScore >= 1000) {
+        var turboCheckbox = document.getElementById('turboCheckbox');
+        var slider = document.getElementById('slider');
+        turboCheckbox.disabled = false;
+        slider.className = ' enabled';
+    }
+    moveStars();
 }
 function startGame() {
     document.getElementById('startScreenContainer').style.display = 'none';
@@ -39,7 +41,19 @@ function startRocket() {
     rocketFlame.style.display = 'block';
     intervalId = setInterval(moveRocket, 10);
     setInterval(update, 10);
-    document.getElementById('rocketStart').removeEventListener('click', startRocket);
+    document.getElementById('rocket').removeEventListener('click', startRocket);
+    document.getElementById('rocket').addEventListener('click', rocketClick);
+}
+function rocketClick() {
+    var rocket = document.getElementById('rocket');
+    rocket.classList.add('clickAnimation');
+    clearTimeout(timeOutId);
+    timeOutId = setTimeout(removeAnimationClass, 2600);
+    gameScore += 100;
+}
+function removeAnimationClass() {
+    var rocket = document.getElementById('rocket');
+    rocket.classList.remove('clickAnimation');
 }
 function onChange(_event) {
     var element = _event.target;
@@ -52,14 +66,16 @@ function onChange(_event) {
             element.disabled = true;
             gameScore = gameScore - baseCost * pow;
             scorePerSecond += baseScorePerSecond * pow * 10;
-            // displayUpgrade((<HTMLElement>(<HTMLInputElement>element.parentElement).parentElement).id, i + 1);
+            displayUpgrade(element.parentElement.parentElement.id, i + 1);
         }
     }
     disableAllCheckboxes();
 }
 function displayUpgrade(_name, _rank) {
     var element = document.getElementById("" + _name + _rank);
-    element.style.display = 'block';
+    if (element != null) {
+        element.style.display = 'block';
+    }
 }
 function createCheckbox() {
     var checkbox = document.createElement('input');
@@ -73,10 +89,19 @@ function createCheckboxes() {
     var elements = document.getElementsByClassName('checkboxes');
     for (var i = 0; i < elements.length; i++) {
         var element = elements[i];
-        for (var j = 0; j < 5; j++) {
+        for (var j = 0; j < 3; j++) {
             element.appendChild(createCheckbox());
         }
     }
+}
+function turboSwitch() {
+    var turboCheckbox = document.getElementById('turboCheckbox');
+    var slider = document.getElementById('slider');
+    document.getElementById('turboMode').style.display = 'block';
+    turboCheckbox.disabled = true;
+    slider.className = ' bought';
+    gameScore -= 1000000;
+    scorePerSecond += 10000;
 }
 function updateCheckboxes(_activeCheckboxes) {
     var checkboxContainer = document.getElementsByClassName('checkboxes');
@@ -94,6 +119,12 @@ function disableAllCheckboxes() {
     for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].disabled = true;
     }
+    var turboCheckbox = document.getElementById('turboCheckbox');
+    var slider = document.getElementById('slider');
+    turboCheckbox.disabled = true;
+    if (!slider.classList.contains('bought')) {
+        slider.className = '';
+    }
 }
 function upgradeWindow() {
     var element = document.getElementById('upgradeWindowContainer');
@@ -107,14 +138,20 @@ function upgradeWindow() {
         icon.style.transform = 'rotate(180deg)';
     }
 }
-function createStar(_left, _top) {
+function createStars() {
     // let star: HTMLImageElement = <HTMLImageElement>document.getElementsByClassName('star')[0];
-    var star = document.createElement("img");
-    star.src = './assets/Star.svg';
-    star.className = 'star assets';
-    star.style.left = _left + "px";
-    star.style.top = _top + "px";
-    document.getElementById('background').appendChild(star);
+    var background = document.getElementById('game');
+    var starContainer = document.getElementById('starContainer');
+    for (var i = 0; i < starCounter; i++) {
+        var star = document.createElement("img");
+        var left = Math.random() * background.clientWidth;
+        var top_1 = Math.random() * background.clientHeight - background.clientHeight;
+        star.src = './assets/Star.svg';
+        star.className = 'star assets';
+        star.style.left = left + "px";
+        star.style.top = top_1 + "px";
+        starContainer.appendChild(star);
+    }
 }
 function getStars() {
     var stars = document.getElementsByClassName('star');
@@ -140,18 +177,25 @@ function checkStarDistance(_star) {
 }
 function moveStars() {
     var stars = getStars();
+    var background = document.getElementById('game');
     for (var i = 0; i < stars.length; i++) {
         var element = stars[i];
-        var top_1 = parseStringToInt(element.style.top);
-        element.style.top = top_1 + 1 + "px";
+        var top_2 = parseStringToInt(element.style.top);
+        if (background.clientHeight < top_2) {
+            var left = Math.random() * background.clientWidth;
+            element.style.left = left + "px";
+            top_2 = -10;
+        }
+        else {
+            top_2 += scorePerSecond / 10;
+        }
+        element.style.top = top_2 + "px";
     }
 }
 function moveRocket() {
-    var rocket = document.getElementById('rocketStart');
+    var rocket = document.getElementById('rocket');
     var rocketBottom = parseStringToInt(window.getComputedStyle(rocket).getPropertyValue('bottom'));
-    var rocketFlame = document.getElementById('rocketFlame');
     var rocketHeight = parseStringToInt(window.getComputedStyle(rocket).getPropertyValue('height'));
-    rocketFlame.style.bottom = rocketBottom - .325 * rocketHeight + 1 + "px";
     rocket.style.bottom = rocketBottom + 1 + "px";
     if (rocketBottom >= screen.height / 2 - rocketHeight / 2) {
         clearInterval(intervalId);
