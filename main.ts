@@ -29,7 +29,10 @@ function update(): void {
         (<HTMLElement>document.getElementById('upgradeButton')).style.display = "block";
     }
     if (gameScore >= baseCost) {
-        updateCheckboxes(Math.log10(gameScore / 500)); // Change lib 
+        let shownCheckbox: number = (Math.log10(gameScore / 500));
+        if (shownCheckbox <= 3) {
+            updateCheckboxes(shownCheckbox); // Change lib 
+        }
     }
     if (gameScore >= 1000000) {
         let turboCheckbox: HTMLInputElement = <HTMLInputElement>document.getElementById('turboCheckbox');
