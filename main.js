@@ -42,6 +42,7 @@ function startGame() {
 }
 function startRocket() {
     var rocketFlame = document.getElementById("rocketFlame");
+    document.getElementById("audio").play();
     rocketFlame.style.display = 'block';
     intervalId = setInterval(moveRocket, 10);
     setInterval(update, 10);

@@ -50,6 +50,7 @@ function startGame(): void {
 
 function startRocket(): void {
     let rocketFlame: HTMLImageElement = <HTMLImageElement>document.getElementById("rocketFlame");
+    (<HTMLAudioElement>document.getElementById("audio")).play();
     rocketFlame.style.display = 'block';
     intervalId = setInterval(moveRocket, 10);
     setInterval(update, 10);
