@@ -31,7 +31,7 @@ function update(): void {
     if (gameScore >= baseCost) {
         updateCheckboxes(Math.log10(gameScore / 500)); // Change lib 
     }
-    if (gameScore >= 1000) {
+    if (gameScore >= 1000000) {
         let turboCheckbox: HTMLInputElement = <HTMLInputElement>document.getElementById('turboCheckbox');
         let slider: HTMLElement = <HTMLElement>document.getElementById('slider');
         turboCheckbox.disabled = false;
@@ -41,6 +41,7 @@ function update(): void {
 }
 
 function startGame(): void {
+    (<HTMLImageElement>document.getElementById("game")).classList.remove('blur');
     (<HTMLElement>document.getElementById('startScreenContainer')).style.display = 'none';
 }
 
@@ -211,7 +212,7 @@ function moveStars(): void {
             top = -10;
         }
         else {
-            top += scorePerSecond / 10;
+            top += Math.log10(scorePerSecond);
         }
         element.style.top = `${top}px`;
     }

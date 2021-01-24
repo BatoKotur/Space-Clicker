@@ -25,7 +25,7 @@ function update() {
     if (gameScore >= baseCost) {
         updateCheckboxes(Math.log10(gameScore / 500)); // Change lib 
     }
-    if (gameScore >= 1000) {
+    if (gameScore >= 1000000) {
         var turboCheckbox = document.getElementById('turboCheckbox');
         var slider = document.getElementById('slider');
         turboCheckbox.disabled = false;
@@ -34,6 +34,7 @@ function update() {
     moveStars();
 }
 function startGame() {
+    document.getElementById("game").classList.remove('blur');
     document.getElementById('startScreenContainer').style.display = 'none';
 }
 function startRocket() {
@@ -187,7 +188,7 @@ function moveStars() {
             top_2 = -10;
         }
         else {
-            top_2 += scorePerSecond / 10;
+            top_2 += Math.log10(scorePerSecond);
         }
         element.style.top = top_2 + "px";
     }

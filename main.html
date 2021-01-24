@@ -13,14 +13,15 @@
 </head>
 
 <body>
-  <div id="game">
+  <div id="startScreenContainer">
+    <button id="startGameButton">
+      <p>Start your Adventure</p>
+    </button>
+    <img class="assets logo" src="./assets/Space_Away_Logo.png">
+  </div>
+  <div id="game" class="blur">
     <label id="score" class="assets"></label>
-    <div id="startScreenContainer">
-      <button id="startGameButton">
-        <p>Start your Adventure</p>
-      </button>
-      <img class="assets logo" src="./assets/Space_Away_Logo.png">
-    </div>
+
     <div id="starContainer"></div>
     <div id="rocket" class="assets">
       <img id="rocketStart" class="assets" src="./assets/Rocket.png">
@@ -62,9 +63,9 @@
           <input id="turboCheckbox" class="checkbox" type="checkbox" disabled>
           <span id="slider" disabled></span>
         </label>
-        </div>
       </div>
     </div>
+  </div>
   </div>
 </body>
 
