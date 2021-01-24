@@ -3,13 +3,14 @@ window.addEventListener('load', init);
 var minStarDistance = 100;
 var intervalId;
 var gameScore = 0;
-var scorePerSecond = 100;
+var baseScorePerSecond = 10;
+var scorePerSecond = 100; // baseScorePerSecond;
+var baseCost = 500;
 function init() {
     document.getElementById('startGameButton').addEventListener('click', startGame);
     document.getElementById('rocketStart').addEventListener('click', startRocket);
     document.getElementById('upgradeButton').addEventListener('click', upgradeWindow);
     createCheckboxes();
-    updateCheckboxes(document.getElementById('shell'), 1);
     createStar(40, 20);
     createStar(100, 50);
     createStar(30, 100);
@@ -22,20 +23,20 @@ function init() {
 }
 function update() {
     document.getElementById('score').innerHTML = Math.floor(gameScore).toString();
-    if (gameScore === 500) {
+    gameScore += scorePerSecond / 100;
+    if (gameScore >= baseCost) {
         document.getElementById('upgradeButton').style.display = "block";
     }
-    gameScore += scorePerSecond / 100;
+    if (gameScore >= baseCost) {
+        updateCheckboxes(Math.log10(gameScore / 500)); // Change lib 
+    }
 }
 function startGame() {
     document.getElementById('startScreenContainer').style.display = 'none';
 }
 function startRocket() {
-    var rocketFlame = document.createElement("img");
-    rocketFlame.src = './assets/Rocket_Flame.png';
-    rocketFlame.className = 'assets';
-    rocketFlame.id = 'rocketFlame';
-    document.getElementById('game').appendChild(rocketFlame);
+    var rocketFlame = document.getElementById("rocketFlame");
+    rocketFlame.style.display = 'block';
     intervalId = setInterval(moveRocket, 10);
     setInterval(update, 10);
     document.getElementById('rocketStart').removeEventListener('click', startRocket);
@@ -45,28 +46,53 @@ function onChange(_event) {
     var checkboxes = element.parentElement.getElementsByClassName('checkbox');
     for (var i = 0; i < checkboxes.length; i++) {
         if (checkboxes[i] === element) {
-            console.log('kaka');
+            var pow = Math.pow(10, i);
+            element.removeEventListener('change', onChange);
+            element.className += ' bought';
+            element.disabled = true;
+            gameScore = gameScore - baseCost * pow;
+            scorePerSecond += baseScorePerSecond * pow * 10;
+            // displayUpgrade((<HTMLElement>(<HTMLInputElement>element.parentElement).parentElement).id, i + 1);
         }
     }
+    disableAllCheckboxes();
 }
-function createCheckboxes() {
-    var elements = document.getElementsByClassName('checkboxes');
+function displayUpgrade(_name, _rank) {
+    var element = document.getElementById("" + _name + _rank);
+    element.style.display = 'block';
+}
+function createCheckbox() {
     var checkbox = document.createElement('input');
-    checkbox.addEventListener('change', onChange);
     checkbox.type = 'checkbox';
     checkbox.className = 'checkbox';
     checkbox.disabled = true;
+    checkbox.addEventListener('change', onChange);
+    return checkbox;
+}
+function createCheckboxes() {
+    var elements = document.getElementsByClassName('checkboxes');
     for (var i = 0; i < elements.length; i++) {
         var element = elements[i];
         for (var j = 0; j < 5; j++) {
-            element.appendChild(checkbox.cloneNode(true));
+            element.appendChild(createCheckbox());
         }
     }
 }
-function updateCheckboxes(_container, _activeCheckboxes) {
-    var elements = document.getElementsByClassName('checkbox');
-    for (var i = 0; i < _activeCheckboxes; i++) {
-        elements[i].disabled = false;
+function updateCheckboxes(_activeCheckboxes) {
+    var checkboxContainer = document.getElementsByClassName('checkboxes');
+    for (var j = 0; j < checkboxContainer.length; j++) {
+        var checkboxes = checkboxContainer[j].getElementsByClassName('checkbox');
+        for (var i = 0; i < _activeCheckboxes; i++) {
+            if (!checkboxes[i].classList.contains('bought')) {
+                checkboxes[i].disabled = false;
+            }
+        }
+    }
+}
+function disableAllCheckboxes() {
+    var checkboxes = document.getElementsByClassName('checkbox');
+    for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].disabled = true;
     }
 }
 function upgradeWindow() {

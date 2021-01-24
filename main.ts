@@ -3,7 +3,9 @@ window.addEventListener('load', init);
 const minStarDistance: number = 100;
 let intervalId: number;
 let gameScore: number = 0;
-let scorePerSecond: number = 100;
+let baseScorePerSecond: number = 10;
+let scorePerSecond: number = 100// baseScorePerSecond;
+const baseCost: number = 500;
 
 function init(): void {
     (<HTMLElement>document.getElementById('startGameButton')).addEventListener('click', startGame);
@@ -13,7 +15,7 @@ function init(): void {
     (<HTMLElement>document.getElementById('upgradeButton')).addEventListener('click', upgradeWindow);
 
     createCheckboxes();
-    updateCheckboxes(<HTMLElement>document.getElementById('shell'),1);
+    
 
 
     createStar(40, 20);
@@ -29,10 +31,13 @@ function init(): void {
 
 function update(): void {
     (<HTMLElement>document.getElementById('score')).innerHTML = Math.floor(gameScore).toString();
-    if (gameScore === 500) {
+    gameScore += scorePerSecond / 100;
+    if (gameScore >= baseCost) {
         (<HTMLElement>document.getElementById('upgradeButton')).style.display = "block";
     }
-    gameScore += scorePerSecond / 100;
+    if (gameScore >= baseCost) {
+        updateCheckboxes(Math.log10(gameScore / 500)); // Change lib 
+    }
 }
 
 function startGame(): void {
@@ -40,44 +45,70 @@ function startGame(): void {
 }
 
 function startRocket(): void {
-    let rocketFlame: HTMLImageElement = <HTMLImageElement>document.createElement("img");
-    rocketFlame.src = './assets/Rocket_Flame.png';
-    rocketFlame.className = 'assets';
-    rocketFlame.id = 'rocketFlame';
-    (<HTMLElement>document.getElementById('game')).appendChild(rocketFlame);
+    let rocketFlame: HTMLImageElement = <HTMLImageElement>document.getElementById("rocketFlame");
+    rocketFlame.style.display = 'block';
     intervalId = setInterval(moveRocket, 10);
     setInterval(update, 10);
     (<HTMLElement>document.getElementById('rocketStart')).removeEventListener('click', startRocket);
 }
 
 function onChange(_event: Event): void {
-    let element: HTMLElement = <HTMLElement>_event.target;
+    let element: HTMLInputElement = <HTMLInputElement>_event.target;
     let checkboxes: HTMLCollectionOf<Element> = (<HTMLElement>element.parentElement).getElementsByClassName('checkbox');
     for (let i: number = 0; i < checkboxes.length; i++) {
         if (checkboxes[i] === element) {
-            console.log('kaka')
+            let pow: number = Math.pow(10, i);
+            element.removeEventListener('change', onChange);
+            element.className += ' bought';
+            element.disabled = true;
+            gameScore = gameScore - baseCost * pow;
+            scorePerSecond += baseScorePerSecond * pow * 10;
+            // displayUpgrade((<HTMLElement>(<HTMLInputElement>element.parentElement).parentElement).id, i + 1);
         }
     }
+    disableAllCheckboxes();
 }
-function createCheckboxes(): void {
-    let elements: HTMLCollectionOf<Element> = document.getElementsByClassName('checkboxes');
-    let checkbox: HTMLInputElement = document.createElement('input')
-    checkbox.addEventListener('change', onChange);
+
+function displayUpgrade(_name: string, _rank: number): void {
+    let element: HTMLElement = <HTMLElement>document.getElementById(`${_name}${_rank}`);
+    element.style.display = 'block';
+}
+
+function createCheckbox(): HTMLInputElement {
+    let checkbox: HTMLInputElement = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.className = 'checkbox';
     checkbox.disabled = true;
+    checkbox.addEventListener('change', onChange);
+    return checkbox;
+}
+
+function createCheckboxes(): void {
+    let elements: HTMLCollectionOf<Element> = document.getElementsByClassName('checkboxes');
     for (let i: number = 0; i < elements.length; i++) {
         let element: Element = elements[i]
         for (let j: number = 0; j < 5; j++) {
-            element.appendChild(checkbox.cloneNode(true));
+            element.appendChild(createCheckbox());
         }
     }
 }
 
-function updateCheckboxes(_container: HTMLElement, _activeCheckboxes: number): void {
-    let elements: HTMLCollectionOf<Element> = document.getElementsByClassName('checkbox');
-    for (let i: number = 0; i < _activeCheckboxes; i++) {
-        (<HTMLInputElement>elements[i]).disabled = false;
+function updateCheckboxes(_activeCheckboxes: number): void {
+    let checkboxContainer: HTMLCollectionOf<Element> = document.getElementsByClassName('checkboxes');
+    for (let j: number = 0; j < checkboxContainer.length; j++) {
+        let checkboxes: HTMLCollectionOf<Element> = checkboxContainer[j].getElementsByClassName('checkbox');
+        for (let i: number = 0; i < _activeCheckboxes; i++) {
+            if (!checkboxes[i].classList.contains('bought')) {
+                (<HTMLInputElement>checkboxes[i]).disabled = false;
+            }
+        }
+    }
+}
+
+function disableAllCheckboxes(): void {
+    let checkboxes: HTMLCollectionOf<Element> = document.getElementsByClassName('checkbox');
+    for(let i: number = 0; i < checkboxes.length; i++) {
+        (<HTMLInputElement>checkboxes[i]).disabled = true;
     }
 }
 

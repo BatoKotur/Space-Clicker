@@ -50,9 +50,10 @@ p {
 }
 
 #rocketFlame {
+  display: none;
   bottom: 70px;
-  width: 25%;
-  z-index: 0
+  width: 100px;
+  z-index: 1;
 }
 
 #arrowIcon {
@@ -85,6 +86,10 @@ input[type="checkbox"]:focus{
   font-size: 2rem;
 }
 
+.bought {
+  background-color: orange;
+}
+
 #upgradeWindowContainer {
   justify-content: center;
   align-items: center;
@@ -100,8 +105,15 @@ input[type="checkbox"]:focus{
 
 #rocketStart {
   bottom: 70px;
-  width: 50%;
-  z-index: 1
+  width: 200px;
+  z-index: 2;
+}
+
+#shell1 {
+  display: none;
+  width: 125px;
+  bottom: 412px;
+  z-index: 2;
 }
 
 #startScreenContainer {
@@ -116,7 +128,7 @@ input[type="checkbox"]:focus{
   bottom: 0;
   background-color: rgba(255, 255, 255, 0);
   backdrop-filter: blur(8px);
-  z-index: 2;
+  z-index: 1000;
 }
 
 #startGameButton {
